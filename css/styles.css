@@ -1,0 +1,16 @@
+html,
+body {
+    height: 100%;
+}
+#mainNav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    opacity: 0.5;
+    z-index: 10000;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
