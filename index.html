@@ -17,9 +17,48 @@
 
     </div><!-- /.container-fluid -->
 </nav>
+
 <div class="row" id="map">
 
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="addLocationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog  modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add Location</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="newLocationName">Name</label>
+                        <input type="text"
+                               class="form-control"
+                               id="newLocationName"
+                               placeholder="Name"
+                               data-bind="value: newLocation().name">
+                    </div>
+                    <div class="form-group">
+                        <label for="newLocationDescription">Description</label>
+                        <textarea type="text"
+                               class="form-control"
+                               id="newLocationDescription"
+                               placeholder="Description"
+                               data-bind="value: newLocation().description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary add-location">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

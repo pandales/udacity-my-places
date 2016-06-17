@@ -41,8 +41,7 @@ var Location = function (properties) {
   var myLatLng = {lat: parseFloat(properties.lat), lng: parseFloat(properties.lng)};
   var marker = new google.maps.Marker({
     position: myLatLng,
-    map: self.map,
-    title: properties.name,
+    title: properties.name
   });
 
   for (property in properties) {
@@ -59,6 +58,17 @@ var mapViewModel = function () {
   self.centerLng = -76.5314704;
   self.zoom = 14;
   self.locations = ko.observableArray([]);
+  self.$addLocationModal = $("#addLocationModal");
+  self.$addLocationTrigger = $(".add-location");
+  self.newLocation = ko.observable(new Location({
+    name: "",
+    description: "",
+    rendered: false,
+    lat: self.centerLat,
+    lng: self.centerLng
+  }));
+
+  var map = null;
 
   // Load the initial locations to the observable array.
   initiaLocations.forEach(function (catItem) {
@@ -69,7 +79,7 @@ var mapViewModel = function () {
   self.toggleRenderLocation = function (location) {
     location.rendered(!location.rendered());
 
-    if (location.rendered()){
+    if (location.rendered()) {
       self.renderLocationInMap(location);
     }
     else {
@@ -78,18 +88,66 @@ var mapViewModel = function () {
   };
 
   self.renderLocationInMap = function (location) {
-    location.marker.setMap(self.map);
+    console.log(location);
+    location.marker.setMap(map);
   };
+
   self.removeLocationFromMap = function (location) {
     location.marker.setMap(null);
   };
 
+  // Add Marker
+  self.openNewLocationForm = function (location) {
+
+    // Add the marker at the clicked location, and add the next-available label
+    // from the array of alphabetical characters.
+    self.newLocation().marker = new google.maps.Marker({
+      position: location,
+      map: map
+    });
+
+    self.$addLocationModal.modal("show");
+  };
+
+  self.$addLocationTrigger.click(function () {
+
+    // Update the rendered property to true to show this item higtlight
+    // when is rendered in the list
+    self.newLocation().rendered(true);
+    self.newLocation().lat(self.newLocation().marker.getPosition().lat());
+    self.newLocation().lng(self.newLocation().marker.getPosition().lng());
+
+    // Add the new created location to the locations array
+    self.locations.push(self.newLocation());
+
+    // hide the modal window
+    self.$addLocationModal.modal("hide");
+  });
+
+  self.$addLocationModal.on('hidden.bs.modal', function () {
+
+    // Create another Location object and assign it to the newLocation property
+    self.newLocation(new Location({
+      name: "",
+      description: "",
+      rendered: false,
+      lat: self.centerLat,
+      lng: self.centerLng
+    }));
+  });
+
+
   // Create and render the google map
   function initMap() {
-    self.map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: self.centerLat, lng: self.centerLng},
       scrollwheel: false,
       zoom: self.zoom
+    });
+
+    // This event listener calls addMarker() when the map is clicked.
+    google.maps.event.addListener(map, 'click', function (event) {
+      self.openNewLocationForm(event.latLng);
     });
   }
 
